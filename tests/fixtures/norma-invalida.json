@@ -1,0 +1,13 @@
+{
+  "id": "ejemplo-invalido",
+  "tipo": "ley",
+  "numero": "0",
+  "titulo": "Ejemplo inválido. No es una norma.",
+  "organismo": "Ninguno",
+  "fecha_publicacion": "2020-13-40",
+  "estado": "derogada",
+  "derogada_por": null,
+  "fuente": "https://example.com/no-es-bcn",
+  "version": "2020-01-27",
+  "texto": "Este archivo no es una norma y debe ser rechazado."
+}

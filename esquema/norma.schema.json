@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nlecarosg/curia_normativas/esquema/norma.schema.json",
+  "title": "Norma",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "tipo",
+    "numero",
+    "titulo",
+    "organismo",
+    "fecha_publicacion",
+    "estado",
+    "derogada_por",
+    "fuente",
+    "version",
+    "texto",
+    "hash"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Identificador estable. En normas nacionales: tipo y número (ley-21206). En ordenanzas: comuna, tipo, número y año."
+    },
+    "tipo": {
+      "type": "string",
+      "enum": [
+        "constitucion",
+        "ley",
+        "decreto",
+        "decreto_exento",
+        "resolucion",
+        "resolucion_exenta",
+        "ordenanza"
+      ]
+    },
+    "numero": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Número tal como lo registra Ley Chile, sin separador de miles. Ejemplos: 21206, 6."
+    },
+    "titulo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organismo": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Organismo que Ley Chile asocia a la norma. En las leyes suele ser el ministerio que la promulga."
+    },
+    "fecha_publicacion": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Fecha de publicación original de la norma en el Diario Oficial."
+    },
+    "estado": {
+      "type": "string",
+      "enum": ["vigente", "derogada", "modificada"]
+    },
+    "derogada_por": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Id de la norma derogatoria. Null si el estado no es derogada."
+    },
+    "fuente": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL https de la versión en bcn.cl o leychile.cl."
+    },
+    "version": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Fecha de la versión del texto almacenado. Coincide con fechaVersion de Ley Chile."
+    },
+    "texto": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Texto de esa versión, sin el resumen ni las notas de la Biblioteca."
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "SHA-256 hexadecimal del campo texto codificado en UTF-8, con prefijo sha256:."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "estado": {
+            "const": "derogada"
+          }
+        },
+        "required": ["estado"]
+      },
+      "then": {
+        "properties": {
+          "derogada_por": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "derogada_por": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

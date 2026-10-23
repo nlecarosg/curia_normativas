@@ -1,0 +1,19 @@
+name: Validar esquema
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    name: Validar normas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validar el esquema de las normas
+        run: |
+          python3 herramientas/validar_normas.py normas
+          python3 -m unittest tests.test_esquema -v
